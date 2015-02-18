@@ -1,4 +1,4 @@
-package com.codepath.apps.codepathtwitterclient;
+package com.codepath.apps.codepathtwitterclient.activities;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -8,6 +8,9 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.codepath.apps.codepathtwitterclient.R;
+import com.codepath.apps.codepathtwitterclient.adapters.TweetsArrayAdapter;
+import com.codepath.apps.codepathtwitterclient.TwitterApplication;
+import com.codepath.apps.codepathtwitterclient.TwitterClient;
 import com.codepath.apps.codepathtwitterclient.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 

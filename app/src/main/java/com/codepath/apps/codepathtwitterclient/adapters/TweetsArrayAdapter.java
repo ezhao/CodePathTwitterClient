@@ -1,4 +1,4 @@
-package com.codepath.apps.codepathtwitterclient;
+package com.codepath.apps.codepathtwitterclient.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codepath.apps.codepathtwitterclient.R;
 import com.codepath.apps.codepathtwitterclient.models.Tweet;
 import com.squareup.picasso.Picasso;
 
