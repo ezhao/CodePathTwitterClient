@@ -1,7 +1,6 @@
 package com.codepath.apps.codepathtwitterclient;
 
 import org.scribe.builder.api.Api;
-import org.scribe.builder.api.FlickrApi;
 import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
@@ -33,16 +32,6 @@ public class TwitterClient extends OAuthBaseClient {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
-	// CHANGE THIS
-	// DEFINE METHODS for different API endpoints here
-	public void getInterestingnessList(AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("?nojsoncallback=1&method=flickr.interestingness.getList");
-		// Can specify query string params directly or through RequestParams.
-		RequestParams params = new RequestParams();
-		params.put("format", "json");
-		client.get(apiUrl, params, handler);
-	}
-
     private void getTimeline(AsyncHttpResponseHandler handler, RequestParams params) {
         params.put("count", 25);
         String apiUrl = getApiUrl("/statuses/home_timeline.json");
@@ -51,12 +40,6 @@ public class TwitterClient extends OAuthBaseClient {
 
     public void getTimelineHome(AsyncHttpResponseHandler handler) {
         RequestParams params = new RequestParams();
-        getTimeline(handler, params);
-    }
-
-    public void getTimelineSince(AsyncHttpResponseHandler handler, long since_id) {
-        RequestParams params = new RequestParams();
-        params.put("since_id", since_id);
         getTimeline(handler, params);
     }
 

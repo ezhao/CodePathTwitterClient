@@ -45,7 +45,7 @@ public class Tweet {
     public static ArrayList<Tweet> fromJSONArray(JSONArray jsonArray) {
         ArrayList<Tweet> tweets = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject tweetJSON = null;
+            JSONObject tweetJSON;
             try {
                 tweetJSON = jsonArray.getJSONObject(i);
                 Tweet tweet = Tweet.fromJSON(tweetJSON);

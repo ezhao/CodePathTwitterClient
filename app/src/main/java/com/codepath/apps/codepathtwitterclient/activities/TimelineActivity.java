@@ -47,7 +47,8 @@ public class TimelineActivity extends ActionBarActivity {
         srlTweets.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                populateTimelineNew();
+                Log.d("EMILY", "Pull to refresh triggered, length of tweets: " + tweets.size());
+                populateTimeline();
                 srlTweets.setRefreshing(false);
             }
         });
@@ -76,26 +77,6 @@ public class TimelineActivity extends ActionBarActivity {
                 Log.d("EMILY", errorResponse.toString());
             }
         });
-    }
-
-    private void populateTimelineNew() {
-        Long since_id = tweets.get(0).getUid();
-        client.getTimelineSince(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                ArrayList<Tweet> newTweets = Tweet.fromJSONArray(response);
-                for (int i = 0; i < newTweets.size(); i++) {
-                    tweets.add(i, newTweets.get(i));
-                }
-                aTweets.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("EMILY", errorResponse.toString());
-            }
-        }, since_id);
-        Log.d("EMILY", "since_id: " + since_id);
     }
 
     private void populateTimelineOld() {
