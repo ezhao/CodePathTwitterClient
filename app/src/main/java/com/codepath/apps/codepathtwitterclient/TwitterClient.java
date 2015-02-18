@@ -2,6 +2,7 @@ package com.codepath.apps.codepathtwitterclient;
 
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.FlickrApi;
+import org.scribe.builder.api.TwitterApi;
 
 import android.content.Context;
 
@@ -22,11 +23,11 @@ import com.loopj.android.http.RequestParams;
  * 
  */
 public class TwitterClient extends OAuthBaseClient {
-	public static final Class<? extends Api> REST_API_CLASS = FlickrApi.class; // Change this
-	public static final String REST_URL = "http://api.flickr.com/services"; // Change this, base API URL
-	public static final String REST_CONSUMER_KEY = "SOME_KEY";       // Change this
-	public static final String REST_CONSUMER_SECRET = "SOME_SECRET"; // Change this
-	public static final String REST_CALLBACK_URL = "oauth://cprest"; // Change this (here and in manifest)
+	public static final Class<? extends Api> REST_API_CLASS = TwitterApi.class;
+	public static final String REST_URL = "https://api.twitter.com/1.1";
+	public static final String REST_CONSUMER_KEY = "jPZY5x84ogkwDRJmyaOXWBlmQ";
+	public static final String REST_CONSUMER_SECRET = "btgX2mMAEvqtTBP9X0lWM51Fn7DhnyGN8R3nID1GL64P3V0zOY";
+	public static final String REST_CALLBACK_URL = "oauth://cpsimpletweets";
 
 	public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
@@ -41,6 +42,14 @@ public class TwitterClient extends OAuthBaseClient {
 		params.put("format", "json");
 		client.get(apiUrl, params, handler);
 	}
+
+    public void getHomeTimeline(AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("/statuses/home_timeline.json");
+        RequestParams params = new RequestParams();
+        params.put("count", 25);
+        params.put("since_id", 1);
+        getClient().get(apiUrl, params, handler);
+    }
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
 	 * 	  i.e getApiUrl("statuses/home_timeline.json");
