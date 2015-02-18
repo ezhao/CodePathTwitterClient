@@ -1,5 +1,6 @@
 package com.codepath.apps.codepathtwitterclient.activities;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import com.codepath.apps.codepathtwitterclient.R;
 import com.codepath.apps.codepathtwitterclient.adapters.TweetsArrayAdapter;
 import com.codepath.apps.codepathtwitterclient.TwitterApplication;
 import com.codepath.apps.codepathtwitterclient.TwitterClient;
+import com.codepath.apps.codepathtwitterclient.interfaces.EndlessScrollListener;
 import com.codepath.apps.codepathtwitterclient.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -25,27 +27,47 @@ public class TimelineActivity extends ActionBarActivity {
     private TwitterClient client;
     private TweetsArrayAdapter aTweets;
     private ArrayList<Tweet> tweets;
-    private ListView lvTweets;
+    private SwipeRefreshLayout srlTweets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
-        lvTweets = (ListView) findViewById(R.id.lvTweets);
         tweets = new ArrayList<>();
         aTweets = new TweetsArrayAdapter(this, tweets);
+        ListView lvTweets = (ListView) findViewById(R.id.lvTweets);
         lvTweets.setAdapter(aTweets);
 
         client = TwitterApplication.getRestClient();
         populateTimeline();
+
+        // Setup pull to refresh
+        srlTweets = (SwipeRefreshLayout) findViewById(R.id.srlTweets);
+        srlTweets.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                populateTimelineNew();
+                srlTweets.setRefreshing(false);
+            }
+        });
+        srlTweets.setColorSchemeResources(android.R.color.holo_blue_bright);
+
+        // Setup infinite scroll
+        lvTweets.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public void onLoadMore() {
+                Log.d("EMILY", "Infinite scroll triggered, length of tweets: " + tweets.size());
+                populateTimelineOld();
+            }
+        });
     }
 
     private void populateTimeline() {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        client.getTimelineHome(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("EMILY", response.toString());
+                aTweets.clear();
                 aTweets.addAll(Tweet.fromJSONArray(response));
             }
 
@@ -54,6 +76,42 @@ public class TimelineActivity extends ActionBarActivity {
                 Log.d("EMILY", errorResponse.toString());
             }
         });
+    }
+
+    private void populateTimelineNew() {
+        Long since_id = tweets.get(0).getUid();
+        client.getTimelineSince(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                ArrayList<Tweet> newTweets = Tweet.fromJSONArray(response);
+                for (int i = 0; i < newTweets.size(); i++) {
+                    tweets.add(i, newTweets.get(i));
+                }
+                aTweets.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("EMILY", errorResponse.toString());
+            }
+        }, since_id);
+        Log.d("EMILY", "since_id: " + since_id);
+    }
+
+    private void populateTimelineOld() {
+        Long max_id = tweets.get(tweets.size()-1).getUid() - 1;
+        client.getTimelineMax(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                aTweets.addAll(Tweet.fromJSONArray(response));
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("EMILY", errorResponse.toString());
+            }
+        }, max_id);
+        Log.d("EMILY", "max_id: " + max_id);
     }
 
     @Override
