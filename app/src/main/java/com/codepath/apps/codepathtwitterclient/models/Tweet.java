@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class Tweet {
+    public static final int MAX_TWEET_LENGTH = 140;
     private String body;
     private long uid;
     private String createdAt;

@@ -20,6 +20,7 @@ import java.util.List;
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
     private static class ViewHolder {
         ImageView ivProfileImage;
+        TextView tvFullName;
         TextView tvUserName;
         TextView tvBody;
         TextView tvCreatedTime;
@@ -40,6 +41,7 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_tweet, parent, false);
             viewHolder.ivProfileImage = (ImageView) convertView.findViewById(R.id.ivProfileImage);
+            viewHolder.tvFullName = (TextView) convertView.findViewById(R.id.tvFullName);
             viewHolder.tvUserName = (TextView) convertView.findViewById(R.id.tvUserName);
             viewHolder.tvBody = (TextView) convertView.findViewById(R.id.tvBody);
             viewHolder.tvCreatedTime = (TextView) convertView.findViewById(R.id.tvCreatedTime);
@@ -49,7 +51,8 @@ public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {
         }
 
         // Populate view
-        viewHolder.tvUserName.setText(tweet.getUser().getScreenName());
+        viewHolder.tvFullName.setText(tweet.getUser().getName());
+        viewHolder.tvUserName.setText(String.format("(@%s)", tweet.getUser().getScreenName()));
         viewHolder.tvBody.setText(tweet.getBody());
         viewHolder.tvCreatedTime.setText(Helper.getRelativeTimeAgo(tweet.getCreatedAt()));
         viewHolder.ivProfileImage.setImageResource(android.R.color.transparent); //clear out recycled view
