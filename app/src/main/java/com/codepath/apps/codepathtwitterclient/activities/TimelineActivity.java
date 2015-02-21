@@ -19,6 +19,7 @@ import com.codepath.apps.codepathtwitterclient.fragments.ComposeDialogFragment.C
 import com.codepath.apps.codepathtwitterclient.helpers.Helper;
 import com.codepath.apps.codepathtwitterclient.interfaces.EndlessScrollListener;
 import com.codepath.apps.codepathtwitterclient.models.Tweet;
+import com.codepath.apps.codepathtwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
@@ -76,24 +77,29 @@ public class TimelineActivity extends ActionBarActivity implements ComposeDialog
     private void showComposeDialog() {
         FragmentManager fm = getFragmentManager();
         ComposeDialogFragment frag = ComposeDialogFragment.newInstance();
-        frag.show(fm, "EMILY");
+        frag.show(fm, "compose");
     }
 
     private void populateTimeline() {
         if (!Helper.isNetworkAvailable(this)) {
             Toast.makeText(this, getResources().getString(R.string.network_issues), Toast.LENGTH_SHORT).show();
+            aTweets.clear();
+            aTweets.addAll(Tweet.fromDatabase());
             return;
         }
         client.getTimelineHome(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Tweet.clearTweets();
+                User.clearUsers();
                 aTweets.clear();
                 aTweets.addAll(Tweet.fromJSONArray(response));
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e("EMILY", responseString);
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.i("EMILY", errorResponse.toString());
             }
         });
     }
@@ -115,8 +121,9 @@ public class TimelineActivity extends ActionBarActivity implements ComposeDialog
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e("EMILY", responseString);
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.i("EMILY", errorResponse.toString());
             }
         }, max_id);
         Log.d("EMILY", "max_id: " + max_id);
@@ -137,8 +144,9 @@ public class TimelineActivity extends ActionBarActivity implements ComposeDialog
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.e("EMILY", responseString);
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.i("EMILY", errorResponse.toString());
             }
         }, tweetText);
     }
