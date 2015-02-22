@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="default_dark">#ff5ca6ec</color>
+    <color name="default_dark_text">#fffdfffd</color>
+</resources>

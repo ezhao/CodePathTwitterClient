@@ -12,8 +12,13 @@
     <string name="placeholder_fullname">Full Name</string>
     <string name="placeholder_username">(@username)</string>
     <string name="placeholder_compose_body">What do you want to say?</string>
+    <string name="placeholder_reply_body">Compose a reply</string>
     <string name="placeholder_character_counter">140</string>
+    <string name="placeholder_retweet_favorites">440 Retweets \t 400 Favorites</string>
+    <string name="retweet_favorites"><b>%s</b> Retweets 	 <b>%s</b> Favorites</string>
+    <string name="generic_error">Something went wrong</string>
     <string name="title_compose">New Tweet</string>
     <string name="network_issues">Sorry we\'re having network troubles</string>
+    <string name="title_activity_tweet">TweetActivity</string>
 
 </resources>

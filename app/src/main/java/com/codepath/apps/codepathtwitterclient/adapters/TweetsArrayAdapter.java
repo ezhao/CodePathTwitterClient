@@ -13,8 +13,6 @@ import com.codepath.apps.codepathtwitterclient.helpers.Helper;
 import com.codepath.apps.codepathtwitterclient.models.Tweet;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 public class TweetsArrayAdapter extends ArrayAdapter<Tweet> {

@@ -27,6 +27,12 @@ public class Tweet extends Model {
     private String createdAt;
     @Column(name = "user")
     private User user;
+    @Column(name = "retweet_count")
+    private int retweetCount;
+    @Column(name = "favorite_count")
+    private int favoriteCount;
+    @Column(name = "entities_url")
+    private String entitiesUrl;
 
     public Tweet(){
         super();
@@ -48,6 +54,18 @@ public class Tweet extends Model {
         return createdAt;
     }
 
+    public int getRetweetCount() {
+        return retweetCount;
+    }
+
+    public int getFavoriteCount() {
+        return favoriteCount;
+    }
+
+    public String getEntitiesUrl() {
+        return entitiesUrl;
+    }
+
     public static Tweet fromJSON(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
         try {
@@ -60,6 +78,14 @@ public class Tweet extends Model {
             tweet.body = jsonObject.getString("text");
             tweet.createdAt = jsonObject.getString("created_at");
             tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+            tweet.retweetCount = jsonObject.getInt("retweet_count");
+            tweet.favoriteCount = jsonObject.getInt("favorite_count");
+
+            JSONArray entities_media = jsonObject.getJSONObject("entities").getJSONArray("media");
+            if (entities_media.length() > 0) {
+                tweet.entitiesUrl = entities_media.getJSONObject(0).getString("media_url");
+            }
+
             tweet.save();
         } catch (JSONException e) {
             e.printStackTrace();

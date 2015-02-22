@@ -1,0 +1,111 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff">
+
+    <ImageView
+        android:id="@+id/ivProfileImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="#ff7dd5aa" />
+
+    <TextView
+        android:id="@+id/tvFullName"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
+        android:text="@string/placeholder_fullname"
+        android:layout_alignTop="@id/ivProfileImage"
+        android:layout_toRightOf="@id/ivProfileImage"
+        android:layout_toEndOf="@id/ivProfileImage" />
+
+    <TextView
+        android:id="@+id/tvUserName"
+        android:textSize="16sp"
+        android:textColor="#999999"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder_username"
+        android:layout_below="@+id/tvFullName"
+        android:layout_toRightOf="@+id/ivProfileImage"
+        android:layout_toEndOf="@+id/ivProfileImage" />
+
+    <TextView
+        android:text="@string/placeholder_body"
+        android:textSize="16sp"
+        android:id="@+id/tvBody"
+        android:autoLink="all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivProfileImage"
+        android:layout_marginTop="10dp"
+        android:layout_alignLeft="@+id/ivProfileImage"
+        android:layout_alignStart="@+id/ivProfileImage" />
+
+    <ImageView
+        android:id="@+id/ivTweetMedia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/welcome_graphic"
+        android:layout_below="@+id/tvBody"
+        android:layout_margin="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/tvCreatedTime"
+        android:textSize="12sp"
+        android:textColor="#999999"
+        android:text="@string/placeholder_created_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivTweetMedia"
+        android:layout_alignLeft="@id/ivTweetMedia"
+        android:layout_alignStart="@id/ivTweetMedia" />
+
+    <View
+        android:id="@+id/vSeparator1"
+        android:layout_height="1dp"
+        android:layout_width="fill_parent"
+        android:background="#90909090"
+        android:layout_below="@id/tvCreatedTime"
+        android:layout_margin="10dp" />
+
+    <TextView
+        android:id="@+id/tvRetweetFavorites"
+        android:text="@string/placeholder_retweet_favorites"
+        android:layout_below="@id/vSeparator1"
+        android:layout_alignLeft="@id/tvCreatedTime"
+        android:layout_alignStart="@id/tvCreatedTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/vSeparator2"
+        android:layout_height="1dp"
+        android:layout_width="fill_parent"
+        android:background="#90909090"
+        android:layout_below="@id/tvRetweetFavorites"
+        android:layout_margin="10dp" />
+
+    <EditText
+        android:id="@+id/etReply"
+        android:textSize="16dp"
+        android:hint="@string/placeholder_reply_body"
+        android:background="@android:color/transparent"
+        android:layout_below="@id/vSeparator2"
+        android:layout_margin="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>
