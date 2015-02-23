@@ -1,7 +1,5 @@
 package com.codepath.apps.codepathtwitterclient.models;
 
-import android.widget.ArrayAdapter;
-
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -81,9 +79,9 @@ public class Tweet extends Model {
             tweet.retweetCount = jsonObject.getInt("retweet_count");
             tweet.favoriteCount = jsonObject.getInt("favorite_count");
 
-            JSONArray entities_media = jsonObject.getJSONObject("entities").getJSONArray("media");
-            if (entities_media.length() > 0) {
-                tweet.entitiesUrl = entities_media.getJSONObject(0).getString("media_url");
+            JSONObject entities = jsonObject.getJSONObject("entities");
+            if (entities.has("media") && entities.getJSONArray("media").length() > 0) {
+                tweet.entitiesUrl = entities.getJSONArray("media").getJSONObject(0).getString("media_url");
             }
 
             tweet.save();

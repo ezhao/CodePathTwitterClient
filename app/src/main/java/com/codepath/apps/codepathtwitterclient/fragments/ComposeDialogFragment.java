@@ -57,7 +57,7 @@ public class ComposeDialogFragment extends DialogFragment {
 
         alertDialogBuilder
             .setView(dialogView)
-            .setPositiveButton("Post", new DialogInterface.OnClickListener() {
+            .setPositiveButton(getResources().getString(R.string.button_post), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     submitTweet();

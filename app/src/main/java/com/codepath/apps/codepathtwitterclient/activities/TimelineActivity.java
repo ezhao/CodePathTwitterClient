@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class TimelineActivity extends ActionBarActivity implements ComposeDialogFragmentListener {
+    public final int REPLY_REQUEST_CODE = 132;
 
     private TwitterClient client;
     private TweetsArrayAdapter aTweets;
@@ -78,7 +79,7 @@ public class TimelineActivity extends ActionBarActivity implements ComposeDialog
                 Tweet tweet = tweets.get(position);
                 Intent i = new Intent(TimelineActivity.this, TweetActivity.class);
                 i.putExtra("uid", tweet.getUid());
-                startActivity(i);
+                startActivityForResult(i, REPLY_REQUEST_CODE);
             }
         });
     }
@@ -144,6 +145,13 @@ public class TimelineActivity extends ActionBarActivity implements ComposeDialog
                 populateTimelineOld();
             }
         }, tweetText);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REPLY_REQUEST_CODE) {
+            onFinishComposeDialog(data.getStringExtra("body"));
+        }
     }
 
     @Override

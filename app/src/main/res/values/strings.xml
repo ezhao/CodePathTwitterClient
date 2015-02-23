@@ -19,6 +19,8 @@
     <string name="generic_error">Something went wrong</string>
     <string name="title_compose">New Tweet</string>
     <string name="network_issues">Sorry we\'re having network troubles</string>
-    <string name="title_activity_tweet">TweetActivity</string>
+    <string name="title_activity_tweet">Tweet</string>
+    <string name="button_post">Post</string>
+    <string name="post_success">Success!</string>
 
 </resources>
