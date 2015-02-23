@@ -137,8 +137,10 @@ public class TweetActivity extends ActionBarActivity {
         } else {
             ivTweetMedia.setVisibility(View.INVISIBLE);
         }
-        tvRetweetFavorites.setText(Html.fromHtml(String.format(getResources().getString(R.string.retweet_favorites),
-                tweet.getRetweetCount(), tweet.getFavoriteCount())));
+        tvRetweetFavorites.setText(Html.fromHtml(
+                String.format(getResources().getString(R.string.retweet_favorites),
+                tweet.getRetweetCount(),
+                tweet.getFavoriteCount())));
         etReply.append(String.format("@%s ", tweet.getUser().getScreenName()));
     }
 
