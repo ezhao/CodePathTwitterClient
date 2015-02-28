@@ -104,7 +104,6 @@ public class Tweet extends Model {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                continue;
             }
         }
         return tweets;

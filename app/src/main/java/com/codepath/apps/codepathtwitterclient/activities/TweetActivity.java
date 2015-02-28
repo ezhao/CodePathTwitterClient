@@ -63,7 +63,7 @@ public class TweetActivity extends ActionBarActivity {
         btPost = (Button) findViewById(R.id.btPost);
         etReply = (EditText) findViewById(R.id.etReply);
 
-        Tweet myTweet = Tweet.getTweet(uid);
+        final Tweet myTweet = Tweet.getTweet(uid);
         if (myTweet != null) {
             populateTweet(myTweet);
         } else {
@@ -106,10 +106,16 @@ public class TweetActivity extends ActionBarActivity {
                     return;
                 }
 
-                Intent data = new Intent();
-                data.putExtra("body", etReply.getText().toString());
-                setResult(RESULT_OK, data);
-                finish();
+                client.postTweet(new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        Tweet tweet = Tweet.fromJSON(response);
+                        Intent data = new Intent();
+                        data.putExtra("tweetUid", tweet.getUid());
+                        setResult(RESULT_OK, data);
+                        finish();
+                    }
+                }, etReply.getText().toString());
             }
         });
     }

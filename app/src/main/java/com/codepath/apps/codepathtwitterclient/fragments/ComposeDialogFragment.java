@@ -12,28 +12,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.apps.codepathtwitterclient.R;
+import com.codepath.apps.codepathtwitterclient.TwitterApplication;
+import com.codepath.apps.codepathtwitterclient.TwitterClient;
+import com.codepath.apps.codepathtwitterclient.helpers.Helper;
 import com.codepath.apps.codepathtwitterclient.models.Tweet;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 public class ComposeDialogFragment extends DialogFragment {
-    public interface ComposeDialogFragmentListener {
-        void onFinishComposeDialog(String tweetText);
+    public interface ComposeTweetListener {
+        void onFinishCompose(Long tweetUid);
     }
 
-    View dialogView;
-    ComposeDialogFragmentListener listener;
-    EditText etComposeTweet;
-    TextView tvCharacterCounter;
+    private TwitterClient client;
+    private View dialogView;
+    private ComposeTweetListener listener;
+    private EditText etComposeTweet;
+    private TextView tvCharacterCounter;
 
     public ComposeDialogFragment() { }
 
     public static ComposeDialogFragment newInstance() {
-        ComposeDialogFragment frag = new ComposeDialogFragment();
         //Bundle args = new Bundle();
         //args.putString("title", title);
         //frag.setArguments(args);
-        return frag;
+        return new ComposeDialogFragment();
     }
 
     private void submitTweet() {
@@ -41,10 +49,27 @@ public class ComposeDialogFragment extends DialogFragment {
             etComposeTweet = (EditText) dialogView.findViewById(R.id.etComposeTweet);
         }
         if (listener == null) {
-            listener = (ComposeDialogFragmentListener) getActivity();
+            listener = (ComposeTweetListener) getActivity();
         }
-        listener.onFinishComposeDialog(etComposeTweet.getText().toString());
+
+        if (!Helper.isNetworkAvailable(getActivity())) {
+            Toast.makeText(getActivity(), getResources().getString(R.string.network_issues), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        client.postTweet(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Tweet tweet = Tweet.fromJSON(response);
+                listener.onFinishCompose(tweet.getUid());
+            }
+        }, etComposeTweet.getText().toString());
         dismiss();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        client = TwitterApplication.getRestClient();
     }
 
     @Override
