@@ -1,4 +1,4 @@
-# Week 3 Assignment - Twitter Client
+# Week 3 and 4 Assignment - Twitter Client
 
 Preview of application
 
@@ -44,9 +44,11 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 
 Time spent part 1: 15 hours
+
 Time spent part 2: 5 hours
 
 [CodePath Week 3 Assignment](http://courses.codepath.com/courses/intro_to_android/week/3#!assignment)
+
 [CodePath Week 4 Assignment](http://courses.codepath.com/courses/intro_to_android/week/4#!assignment)
 
 Library credits: [CodePath RestClientTemplate](https://github.com/codepath/android-rest-client-template), [Picasso](http://square.github.io/picasso/), [android-async-http](http://loopj.com/android-async-http/), [AndroidStaggeredGrid](https://github.com/f-barth/AndroidStaggeredGrid), [ActiveAndroid](https://github.com/pardom/ActiveAndroid), more linked to from RestClientTemplate, [PagerSlidingTabStrip](https://github.com/astuetz/PagerSlidingTabStrip).
