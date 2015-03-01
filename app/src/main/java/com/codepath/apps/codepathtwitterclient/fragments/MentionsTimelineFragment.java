@@ -10,13 +10,12 @@ import com.codepath.apps.codepathtwitterclient.TwitterClient;
 import com.codepath.apps.codepathtwitterclient.adapters.TweetsArrayAdapter;
 import com.codepath.apps.codepathtwitterclient.helpers.Helper;
 import com.codepath.apps.codepathtwitterclient.models.Tweet;
-import com.codepath.apps.codepathtwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
 
-public class HomeTimelineFragment extends TweetsListFragment {
+public class MentionsTimelineFragment extends TweetsListFragment {
     private TwitterClient client;
 
     @Override
@@ -34,11 +33,9 @@ public class HomeTimelineFragment extends TweetsListFragment {
             addAll(Tweet.fromDatabase());
             return;
         }
-        client.getTimelineHome(new JsonHttpResponseHandler() {
+        client.getTimelineMentions(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Tweet.clearTweets();
-                User.clearUsers();
                 clear();
                 addAll(Tweet.fromJSONArray(response));
             }
@@ -54,8 +51,8 @@ public class HomeTimelineFragment extends TweetsListFragment {
             populateTimeline();
             return;
         }
-        Long max_id = aTweets.getItem(aTweets.getCount() - 1).getUid() - 1;
-        client.getTimelineHomeMax(new JsonHttpResponseHandler() {
+        Long max_id = aTweets.getItem(aTweets.getCount()-1).getUid() - 1;
+        client.getTimelineMentionsMax(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 addAll(Tweet.fromJSONArray(response));
@@ -63,4 +60,5 @@ public class HomeTimelineFragment extends TweetsListFragment {
         }, max_id);
         Log.d("EMILY", "max_id: " + max_id);
     }
+
 }

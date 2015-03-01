@@ -10,18 +10,28 @@ import com.codepath.apps.codepathtwitterclient.TwitterClient;
 import com.codepath.apps.codepathtwitterclient.adapters.TweetsArrayAdapter;
 import com.codepath.apps.codepathtwitterclient.helpers.Helper;
 import com.codepath.apps.codepathtwitterclient.models.Tweet;
-import com.codepath.apps.codepathtwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
 import org.json.JSONArray;
 
-public class HomeTimelineFragment extends TweetsListFragment {
+public class UserTimelineFragment extends TweetsListFragment {
     private TwitterClient client;
+    private String screen_name;
+
+    public static UserTimelineFragment newInstance(String screen_name) {
+        UserTimelineFragment userTimelineFragment = new UserTimelineFragment();
+        Bundle args = new Bundle();
+        args.putString("screen_name", screen_name);
+        userTimelineFragment.setArguments(args);
+        return userTimelineFragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        screen_name = getArguments().getString("screen_name");
 
         client = TwitterApplication.getRestClient();
         populateTimeline();
@@ -34,15 +44,13 @@ public class HomeTimelineFragment extends TweetsListFragment {
             addAll(Tweet.fromDatabase());
             return;
         }
-        client.getTimelineHome(new JsonHttpResponseHandler() {
+        client.getTimelineUser(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Tweet.clearTweets();
-                User.clearUsers();
                 clear();
                 addAll(Tweet.fromJSONArray(response));
             }
-        });
+        }, screen_name);
     }
 
     protected void populateTimelineOld(TweetsArrayAdapter aTweets) {
@@ -55,12 +63,12 @@ public class HomeTimelineFragment extends TweetsListFragment {
             return;
         }
         Long max_id = aTweets.getItem(aTweets.getCount() - 1).getUid() - 1;
-        client.getTimelineHomeMax(new JsonHttpResponseHandler() {
+        client.getTimelineUserMax(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 addAll(Tweet.fromJSONArray(response));
             }
-        }, max_id);
+        }, screen_name, max_id);
         Log.d("EMILY", "max_id: " + max_id);
     }
 }

@@ -1,1 +1,3 @@
-ALTER TABLE Tweets ADD COLUMN (retweet_count INTEGER, favorite_count INTEGER, entities_url VARCHAR(255));
+ALTER TABLE Tweets ADD COLUMN retweet_count INTEGER;
+ALTER TABLE Tweets ADD COLUMN favorite_count INTEGER;
+ALTER TABLE Tweets ADD COLUMN entities_url VARCHAR(255);

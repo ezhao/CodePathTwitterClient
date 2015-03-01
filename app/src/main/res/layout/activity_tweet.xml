@@ -16,6 +16,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:contentDescription="@string/image_desc_profile"
             android:background="#ff7dd5aa" />
 
         <TextView
@@ -62,6 +63,7 @@
             android:src="@drawable/welcome_graphic"
             android:layout_below="@+id/tvBody"
             android:paddingBottom="10dp"
+            android:contentDescription="@string/image_desc_embedded"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentLeft="true"
