@@ -6,9 +6,11 @@ import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "Users")
@@ -69,7 +71,7 @@ public class User extends Model {
     public static User fromJSON(JSONObject jsonObject) {
         User user = new User();
         try {
-            Long newUid = jsonObject.getLong("id");
+            long newUid = jsonObject.getLong("id");
             User existingUser = User.getUser(newUid);
             if (existingUser != null) {
                 user = existingUser;
@@ -87,6 +89,23 @@ public class User extends Model {
             e.printStackTrace();
         }
         return user;
+    }
+
+    public static ArrayList<User> fromJSONArray(JSONArray jsonArray) {
+        ArrayList<User> users = new ArrayList<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject userJSON;
+            try {
+                userJSON = jsonArray.getJSONObject(i);
+                User user = User.fromJSON(userJSON);
+                if (user != null) {
+                    users.add(user);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return users;
     }
 
     public static User getUser(long uid) {

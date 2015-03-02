@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.astuetz.PagerSlidingTabStrip;
 import com.codepath.apps.codepathtwitterclient.R;
 import com.codepath.apps.codepathtwitterclient.fragments.ComposeDialogFragment;
+import com.codepath.apps.codepathtwitterclient.fragments.ComposeDialogFragment.ComposeTweetListener;
 import com.codepath.apps.codepathtwitterclient.fragments.HomeTimelineFragment;
 import com.codepath.apps.codepathtwitterclient.fragments.MentionsTimelineFragment;
 import com.codepath.apps.codepathtwitterclient.fragments.TweetsListFragment;
@@ -19,7 +20,7 @@ import com.codepath.apps.codepathtwitterclient.fragments.TweetsListFragment.Twee
 import com.codepath.apps.codepathtwitterclient.helpers.SmartFragmentStatePagerAdapter;
 import com.codepath.apps.codepathtwitterclient.models.Tweet;
 
-public class TimelineActivity extends ActionBarActivity implements ComposeDialogFragment.ComposeTweetListener, TweetTapListener {
+public class TimelineActivity extends ActionBarActivity implements ComposeTweetListener, TweetTapListener {
     public final int REPLY_REQUEST_CODE = 132;
     ViewPager viewPager;
     TweetsPagerAdapter tweetsPagerAdapter;
@@ -49,15 +50,17 @@ public class TimelineActivity extends ActionBarActivity implements ComposeDialog
     }
 
     @Override
-    public void onFinishCompose(Long tweetUid) {
+    public void onFinishCompose(long tweetUid) {
         Tweet tweet = Tweet.getTweet(tweetUid);
         viewPager.setCurrentItem(0);
         TweetsListFragment fragmentTweetsList = (TweetsListFragment) tweetsPagerAdapter.getRegisteredFragment(0);
-        fragmentTweetsList.addNewTweet(tweet);
+        if (fragmentTweetsList!= null) {
+            fragmentTweetsList.addNewTweet(tweet);
+        }
     }
 
     @Override
-    public void onTweetTapped(Long tweetUid) {
+    public void onTweetTapped(long tweetUid) {
         Intent i = new Intent(TimelineActivity.this, TweetActivity.class);
         i.putExtra("uid", tweetUid);
         startActivityForResult(i, REPLY_REQUEST_CODE);

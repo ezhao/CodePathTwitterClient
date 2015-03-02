@@ -36,7 +36,7 @@ public class TwitterClient extends OAuthBaseClient {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
-    public void getTweet(AsyncHttpResponseHandler handler, Long uid) {
+    public void getTweet(AsyncHttpResponseHandler handler, long uid) {
         String apiUrl = getApiUrl("statuses/show.json");
         RequestParams params = new RequestParams();
         params.put("id", uid);
@@ -71,21 +71,25 @@ public class TwitterClient extends OAuthBaseClient {
         getTimeline(handler, params, TimelineType.MENTIONS);
     }
 
-    public void getTimelineMentionsMax(AsyncHttpResponseHandler handler, Long max_id) {
+    public void getTimelineMentionsMax(AsyncHttpResponseHandler handler, long max_id) {
         RequestParams params = new RequestParams();
         params.put("max_id", max_id);
         getTimeline(handler, params, TimelineType.MENTIONS);
     }
 
-    public void getTimelineUser(AsyncHttpResponseHandler handler, String screen_name) {
+    public void getTimelineUser(AsyncHttpResponseHandler handler, long user_id) {
         RequestParams params = new RequestParams();
-        params.put("screen_name", screen_name);
+        if (user_id > 0) {
+            params.put("user_id", user_id);
+        }
         getTimeline(handler, params, TimelineType.USER);
     }
 
-    public void getTimelineUserMax(AsyncHttpResponseHandler handler, String screen_name, Long max_id) {
+    public void getTimelineUserMax(AsyncHttpResponseHandler handler, long user_id, long max_id) {
         RequestParams params = new RequestParams();
-        params.put("screen_name", screen_name);
+        if (user_id > 0) {
+            params.put("user_id", user_id);
+        }
         params.put("max_id", max_id);
         getTimeline(handler, params, TimelineType.USER);
     }
@@ -95,10 +99,29 @@ public class TwitterClient extends OAuthBaseClient {
         getClient().get(apiUrl, null, handler);
     }
 
+    public void getUserInfo(AsyncHttpResponseHandler handler, long user_id) {
+        if (user_id > 0) {
+            String apiUrl = getApiUrl("/users/lookup.json");
+            RequestParams params = new RequestParams();
+            params.put("user_id", user_id);
+            getClient().get(apiUrl, params, handler);
+        } else {
+            getUserInfo(handler);
+        }
+    }
+
     public void postTweet(AsyncHttpResponseHandler handler, String status) {
         String apiUrl = getApiUrl("/statuses/update.json");
         RequestParams params = new RequestParams();
         params.put("status", status);
+        getClient().post(apiUrl, params, handler);
+    }
+
+    public void postTweet(AsyncHttpResponseHandler handler, String status, long status_id) {
+        String apiUrl = getApiUrl("/statuses/update.json");
+        RequestParams params = new RequestParams();
+        params.put("status", status);
+        params.put("in_reply_to_status_id", status_id);
         getClient().post(apiUrl, params, handler);
     }
 

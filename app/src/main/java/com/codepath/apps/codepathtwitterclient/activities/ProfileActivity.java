@@ -1,27 +1,39 @@
 package com.codepath.apps.codepathtwitterclient.activities;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.codepath.apps.codepathtwitterclient.R;
 import com.codepath.apps.codepathtwitterclient.TwitterApplication;
 import com.codepath.apps.codepathtwitterclient.TwitterClient;
+import com.codepath.apps.codepathtwitterclient.fragments.ComposeDialogFragment.ComposeTweetListener;
 import com.codepath.apps.codepathtwitterclient.fragments.TweetsListFragment.TweetTapListener;
 import com.codepath.apps.codepathtwitterclient.fragments.UserTimelineFragment;
+import com.codepath.apps.codepathtwitterclient.helpers.Helper;
+import com.codepath.apps.codepathtwitterclient.models.Tweet;
 import com.codepath.apps.codepathtwitterclient.models.User;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ProfileActivity extends ActionBarActivity implements TweetTapListener {
+import java.util.ArrayList;
+
+public class ProfileActivity extends ActionBarActivity implements ComposeTweetListener, TweetTapListener {
+    public final int REPLY_REQUEST_CODE = 12;
     private User user;
+    UserTimelineFragment userTimelineFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,19 +41,50 @@ public class ProfileActivity extends ActionBarActivity implements TweetTapListen
         setContentView(R.layout.activity_profile);
 
         TwitterClient client = TwitterApplication.getRestClient();
-        client.getUserInfo(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                user = User.fromJSON(response);
-                getSupportActionBar().setTitle("@" + user.getScreenName());
+
+        long user_id = getIntent().getLongExtra("user_id", 0);
+        Log.i("EMILY", "user_id: " + user_id);
+        //user_id = 10;
+
+        // Populate header
+        if (user_id > 0) {
+            user = User.getUser(user_id);
+            if (user == null) {
+                Log.e("EMILY", "Couldn't find user, that's weird.");
+                if (!Helper.isNetworkAvailable(this)) {
+                    Toast.makeText(this, getResources().getString(R.string.network_issues), Toast.LENGTH_SHORT).show();
+                } else {
+                    client.getUserInfo(new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                            ArrayList<User> users = User.fromJSONArray(response);
+                            if (users.size() > 0) {
+                                user = users.get(0);
+                                populateProfileHeader(user);
+                            }
+                        }
+                    }, user_id);
+                }
+            } else {
                 populateProfileHeader(user);
             }
-        });
+        } else {
+            if (!Helper.isNetworkAvailable(this)) {
+                Toast.makeText(this, getResources().getString(R.string.network_issues), Toast.LENGTH_SHORT).show();
+            } else {
+                client.getUserInfo(new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        user = User.fromJSON(response);
+                        populateProfileHeader(user);
+                    }
+                });
+            }
+        }
 
-        String screen_name = getIntent().getStringExtra("screen_name");
-
+        // Populate timeline
         if (savedInstanceState == null) {
-            UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(screen_name);
+            userTimelineFragment = UserTimelineFragment.newInstance(user_id);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.flUserTimeline, userTimelineFragment);
             ft.commit();
@@ -49,6 +92,8 @@ public class ProfileActivity extends ActionBarActivity implements TweetTapListen
     }
 
     private void populateProfileHeader(User user) {
+        getSupportActionBar().setTitle("@" + user.getScreenName());
+
         ImageView ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
         TextView tvFullName = (TextView) findViewById(R.id.tvFullName);
         TextView tvUserName = (TextView) findViewById(R.id.tvUserName);
@@ -66,6 +111,9 @@ public class ProfileActivity extends ActionBarActivity implements TweetTapListen
 
         ivProfileImage.setImageResource(0);
         Picasso.with(this).load(user.getProfileImageUrl()).into(ivProfileImage);
+
+        ProgressBar pb = (ProgressBar) findViewById(R.id.pbLoading);
+        pb.setVisibility(ProgressBar.INVISIBLE);
     }
 
 
@@ -92,7 +140,26 @@ public class ProfileActivity extends ActionBarActivity implements TweetTapListen
     }
 
     @Override
-    public void onTweetTapped(Long tweetUid) {
-        // TODO(emily) implement something when tweets are tapped!
+    public void onTweetTapped(long tweetUid) {
+        Intent i = new Intent(ProfileActivity.this, TweetActivity.class);
+        i.putExtra("uid", tweetUid);
+        startActivityForResult(i, REPLY_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REPLY_REQUEST_CODE) {
+            onFinishCompose(data.getLongExtra("tweetUid", 0));
+        }
+    }
+
+    @Override
+    public void onFinishCompose(long tweetUid) {
+        if (userTimelineFragment != null) {
+            Tweet tweet = Tweet.getTweet(tweetUid);
+            if (user.getUid() == tweet.getUser().getUid()) {
+                userTimelineFragment.addNewTweet(tweet);
+            }
+        }
     }
 }

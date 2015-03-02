@@ -27,7 +27,7 @@ public abstract class TweetsListFragment extends Fragment {
     private TweetTapListener listener;
 
     public interface TweetTapListener {
-        void onTweetTapped(Long tweetUid);
+        void onTweetTapped(long tweetUid);
     }
 
     @Override

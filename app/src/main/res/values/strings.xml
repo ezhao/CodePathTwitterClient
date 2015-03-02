@@ -19,9 +19,9 @@
     <string name="placeholder_count_tweets">622\nTWEETS</string>
     <string name="placeholder_count_following">131\nFOLLOWING</string>
     <string name="placeholder_count_followers">756\nFOLLOWERS</string>
-    <string name="count_tweets">%d\nTWEETS</string>
-    <string name="count_following">%d\nFOLLOWING</string>
-    <string name="count_followers">%d\nFOLLOWERS</string>
+    <string name="count_tweets">%,d\nTWEETS</string>
+    <string name="count_following">%,d\nFOLLOWING</string>
+    <string name="count_followers">%,d\nFOLLOWERS</string>
     <string name="image_desc_profile">User profile image</string>
     <string name="image_desc_embedded">Embedded image</string>
     <string name="retweet_favorites"><b>%s</b> Retweets \t <b>%s</b> Favorites</string>

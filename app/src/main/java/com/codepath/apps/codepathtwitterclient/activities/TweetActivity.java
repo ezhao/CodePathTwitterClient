@@ -29,7 +29,7 @@ import org.apache.http.Header;
 import org.json.JSONObject;
 
 public class TweetActivity extends ActionBarActivity {
-    Long uid;
+    long uid;
     ImageView ivProfileImage;
     TextView tvFullName;
     TextView tvUserName;
@@ -54,6 +54,7 @@ public class TweetActivity extends ActionBarActivity {
 
         ivProfileImage = (ImageView) findViewById(R.id.ivProfileImage);
         tvFullName = (TextView) findViewById(R.id.tvFullName);
+        tvFullName = (TextView) findViewById(R.id.tvFullName);
         tvUserName = (TextView) findViewById(R.id.tvUserName);
         tvBody = (TextView) findViewById(R.id.tvBody);
         tvCreatedTime = (TextView) findViewById(R.id.tvCreatedTime);
@@ -67,8 +68,8 @@ public class TweetActivity extends ActionBarActivity {
         if (myTweet != null) {
             populateTweet(myTweet);
         } else {
+            Log.e("EMILY", "Couldn't find tweet, that's weird.");
             getTweet();
-            Toast.makeText(this, getResources().getString(R.string.generic_error), Toast.LENGTH_SHORT).show();
         }
 
         etReply.addTextChangedListener(new TextWatcher() {
@@ -103,34 +104,36 @@ public class TweetActivity extends ActionBarActivity {
             public void onClick(View v) {
                 if (!Helper.isNetworkAvailable(TweetActivity.this)) {
                     Toast.makeText(TweetActivity.this, getResources().getString(R.string.network_issues), Toast.LENGTH_SHORT).show();
-                    return;
+                } else {
+                    client.postTweet(new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Tweet tweet = Tweet.fromJSON(response);
+                            Intent data = new Intent();
+                            data.putExtra("tweetUid", tweet.getUid());
+                            setResult(RESULT_OK, data);
+                            finish();
+                        }
+                    }, etReply.getText().toString(), uid);
                 }
-
-                client.postTweet(new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        Tweet tweet = Tweet.fromJSON(response);
-                        Intent data = new Intent();
-                        data.putExtra("tweetUid", tweet.getUid());
-                        setResult(RESULT_OK, data);
-                        finish();
-                    }
-                }, etReply.getText().toString());
             }
         });
     }
 
     private void getTweet() {
-        Log.i("EMILY", "getTweet");
-        client.getTweet(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                populateTweet(Tweet.fromJSON(response));
-            }
-        }, uid);
+        if (!Helper.isNetworkAvailable(this)) {
+            Toast.makeText(this, getResources().getString(R.string.network_issues), Toast.LENGTH_SHORT).show();
+        } else {
+            client.getTweet(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    populateTweet(Tweet.fromJSON(response));
+                }
+            }, uid);
+        }
     }
 
-    private void populateTweet(Tweet tweet) {
+    private void populateTweet(final Tweet tweet) {
         ivProfileImage.setImageResource(0);
         Picasso.with(this).load(tweet.getUser().getProfileImageUrl()).into(ivProfileImage);
         tvFullName.setText(tweet.getUser().getName());
@@ -148,6 +151,17 @@ public class TweetActivity extends ActionBarActivity {
                 tweet.getRetweetCount(),
                 tweet.getFavoriteCount())));
         etReply.append(String.format("@%s ", tweet.getUser().getScreenName()));
+        etReply.clearFocus();
+
+        final long user_id = tweet.getUser().getUid();
+        ivProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(TweetActivity.this, ProfileActivity.class);
+                i.putExtra("user_id", user_id);
+                startActivity(i);
+            }
+        });
     }
 
     @Override

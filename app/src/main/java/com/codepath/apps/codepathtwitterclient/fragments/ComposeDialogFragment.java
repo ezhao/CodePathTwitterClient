@@ -26,7 +26,7 @@ import org.json.JSONObject;
 
 public class ComposeDialogFragment extends DialogFragment {
     public interface ComposeTweetListener {
-        void onFinishCompose(Long tweetUid);
+        void onFinishCompose(long tweetUid);
     }
 
     private TwitterClient client;
@@ -54,16 +54,16 @@ public class ComposeDialogFragment extends DialogFragment {
 
         if (!Helper.isNetworkAvailable(getActivity())) {
             Toast.makeText(getActivity(), getResources().getString(R.string.network_issues), Toast.LENGTH_SHORT).show();
-            return;
+        } else {
+            client.postTweet(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    Tweet tweet = Tweet.fromJSON(response);
+                    listener.onFinishCompose(tweet.getUid());
+                }
+            }, etComposeTweet.getText().toString());
+            dismiss();
         }
-        client.postTweet(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Tweet tweet = Tweet.fromJSON(response);
-                listener.onFinishCompose(tweet.getUid());
-            }
-        }, etComposeTweet.getText().toString());
-        dismiss();
     }
 
     @Override

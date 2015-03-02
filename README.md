@@ -1,8 +1,8 @@
-# Week 3 and 4 Assignment - Twitter Client
+# Week 3 and 4 - Twitter Client
 
 Preview of application
 
-![Animation of app](https://www.dropbox.com/s/advdpqgc13gbtud/CodePathTwitterClient.gif?dl=1)
+![Animation of app](https://www.dropbox.com/s/5ooiahbnts90dms/CodePathTwitterClient2.gif?dl=1)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -29,27 +29,23 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 - [x] Bonus: User can see embedded image media within the tweet detail view
 - [x] User can switch between Timeline and Mention views using tabs.
 - [x] User can navigate to view their own profile and see picture, tagline, # of followers, # of following, and tweets on their profile.
-- [ ] User can click on the profile image in any tweet to see another user's profile and see picture, tagline, # of followers, # of following, and tweets on their profile.
+- [x] User can click on the profile image in any tweet to see another user's profile and see picture, tagline, # of followers, # of following, and tweets on their profile.
 	- [ ] Optional: User can view following / followers list through the profile
-- [ ] User can infinitely paginate any of these timelines (home, mentions, user) by scrolling to the bottom
-- [ ] Advanced: Robust error handling, check if internet is available, handle error cases, network failures
+- [x] User can infinitely paginate any of these timelines (home, mentions, user) by scrolling to the bottom
+- [x] Advanced: Robust error handling, check if internet is available, handle error cases, network failures
+- [x] Advanced: Improve the user interface and theme the app to feel twitter branded
 - [ ] Advanced: When a network request is sent, user sees an indeterminate progress indicator
-- [ ] Advanced: User can "reply" to any tweet on their home timeline
-	- [ ] The user that wrote the original tweet is automatically "@" replied in compose
-- [ ] Advanced: User can click on a tweet to be taken to a "detail view" of that tweet
-	- [ ] Advanced: User can take favorite (and unfavorite) or reweet actions on a tweet
-- [ ] Advanced: Improve the user interface and theme the app to feel twitter branded
+- [ ] Advanced: User can "reply" to any tweet from their home timeline
+- [ ] Advanced: User can take favorite (and unfavorite) or reweet actions on a tweet
 - [ ] Advanced: User can search for tweets matching a particular query and see results
 - [ ] Bonus: User can view their direct messages (or send new ones)
 
+Known issues
+- In offline mode, timelines are not populated with the right content because it currently just selects all tweets.
 
-Time spent part 1: 15 hours
+Time spent Part 1: 15 hours | Part 2: 10 hours
 
-Time spent part 2: 5 hours
-
-[CodePath Week 3 Assignment](http://courses.codepath.com/courses/intro_to_android/week/3#!assignment)
-
-[CodePath Week 4 Assignment](http://courses.codepath.com/courses/intro_to_android/week/4#!assignment)
+[CodePath Week 3 Assignment](http://courses.codepath.com/courses/intro_to_android/week/3#!assignment) | [CodePath Week 4 Assignment](http://courses.codepath.com/courses/intro_to_android/week/4#!assignment)
 
 Library credits: [CodePath RestClientTemplate](https://github.com/codepath/android-rest-client-template), [Picasso](http://square.github.io/picasso/), [android-async-http](http://loopj.com/android-async-http/), [AndroidStaggeredGrid](https://github.com/f-barth/AndroidStaggeredGrid), [ActiveAndroid](https://github.com/pardom/ActiveAndroid), more linked to from RestClientTemplate, [PagerSlidingTabStrip](https://github.com/astuetz/PagerSlidingTabStrip).
 

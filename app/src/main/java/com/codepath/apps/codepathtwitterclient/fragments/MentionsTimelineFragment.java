@@ -51,7 +51,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
             populateTimeline();
             return;
         }
-        Long max_id = aTweets.getItem(aTweets.getCount()-1).getUid() - 1;
+        long max_id = aTweets.getItem(aTweets.getCount()-1).getUid() - 1;
         client.getTimelineMentionsMax(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {

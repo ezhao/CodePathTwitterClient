@@ -17,12 +17,12 @@ import org.json.JSONArray;
 
 public class UserTimelineFragment extends TweetsListFragment {
     private TwitterClient client;
-    private String screen_name;
+    private long user_id;
 
-    public static UserTimelineFragment newInstance(String screen_name) {
+    public static UserTimelineFragment newInstance(long user_id) {
         UserTimelineFragment userTimelineFragment = new UserTimelineFragment();
         Bundle args = new Bundle();
-        args.putString("screen_name", screen_name);
+        args.putLong("user_id", user_id);
         userTimelineFragment.setArguments(args);
         return userTimelineFragment;
     }
@@ -31,7 +31,7 @@ public class UserTimelineFragment extends TweetsListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        screen_name = getArguments().getString("screen_name");
+        user_id = getArguments().getLong("user_id");
 
         client = TwitterApplication.getRestClient();
         populateTimeline();
@@ -50,10 +50,11 @@ public class UserTimelineFragment extends TweetsListFragment {
                 clear();
                 addAll(Tweet.fromJSONArray(response));
             }
-        }, screen_name);
+        }, user_id);
     }
 
     protected void populateTimelineOld(TweetsArrayAdapter aTweets) {
+        Log.i("EMILY", "populateTimelineOld UserTimelineFragment: " + user_id);
         if (!Helper.isNetworkAvailable(getActivity())) {
             Toast.makeText(getActivity(), getResources().getString(R.string.network_issues), Toast.LENGTH_SHORT).show();
             return;
@@ -62,13 +63,13 @@ public class UserTimelineFragment extends TweetsListFragment {
             populateTimeline();
             return;
         }
-        Long max_id = aTweets.getItem(aTweets.getCount() - 1).getUid() - 1;
+        long max_id = aTweets.getItem(aTweets.getCount() - 1).getUid() - 1;
         client.getTimelineUserMax(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 addAll(Tweet.fromJSONArray(response));
             }
-        }, screen_name, max_id);
+        }, user_id, max_id);
         Log.d("EMILY", "max_id: " + max_id);
     }
 }
